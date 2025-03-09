@@ -6,7 +6,7 @@ const proxy = httpproxy.createProxy();
 
 const app = express();
 
-const BASEPATH = `https://building-bucket-deployment.s3.ap-south-1.amazonaws.com/__outputs`;
+const BASEPATH = `${process.env.S3_BUCKET_URL}/__outputs`;
 
 app.use((req, res) => {
   const hostname = req.hostname;
@@ -24,4 +24,4 @@ proxy.on("proxyReq", (proxyReq, req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Proxy server started ${PORT}`));
+app.listen(PORT, () => console.log(`Proxy server started on port ${PORT}`));

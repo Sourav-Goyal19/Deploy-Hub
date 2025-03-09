@@ -9,3 +9,5 @@ api-server/dist
 proxy-server/.env
 building-server/.env
 api-server/.env
+
+.env
