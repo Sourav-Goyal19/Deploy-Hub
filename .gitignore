@@ -1,0 +1,11 @@
+vite-project
+
+proxy-server/node_modules
+building-server/node_modules
+api-server/node_modules
+proxy-server/dist
+building-server/dist
+api-server/dist
+proxy-server/.env
+building-server/.env
+api-server/.env
