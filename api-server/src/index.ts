@@ -14,9 +14,9 @@ const io = new Server({ cors: { origin: "*" } });
 io.listen(9001);
 
 io.on("connection", (socket) => {
-  socket.on("subscribe", (channel) => {
-    socket.join(channel);
-    socket.emit("message", `Socket Subcribed to ${channel}`);
+  socket.on("subscribe", (room) => {
+    socket.join(room);
+    socket.emit("message", `Socket Subcribed to ${room}`);
   });
 });
 
