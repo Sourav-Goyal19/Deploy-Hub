@@ -1,13 +1,17 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import { generateSlug } from "random-word-slugs";
 import { RunTaskCommand, ECSClient } from "@aws-sdk/client-ecs";
 import { Server } from "socket.io";
 import { redis } from "./services/redis";
+import authRouter from "./routes/auth";
+import { authMiddleware } from "./middlewares/auth";
 
 const PORT = process.env.PORT || 9000;
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 const io = new Server({ cors: { origin: "*" } });
 
@@ -92,6 +96,13 @@ app.post("/project", async (req, res) => {
       slug: `logs-${projectSlug}`,
     },
   });
+});
+
+app.use("/api/auth", authRouter);
+
+app.get("/api/user", authMiddleware, (req, res) => {
+  // @ts-ignore
+  res.status(200).json({ user: req.user, message: "User got successfully" });
 });
 
 async function subscribeToRedis() {

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import Button from "./button";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,9 +30,9 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 inset-x-0 flex items-center justify-center z-50 py-3 px-4 transition-all duration-300",
+        "fixed top-0 inset-x-0 flex items-center justify-center z-50 p-4 transition-all duration-300",
         isScrolled
-          ? "bg-background/80 backdrop-blur-md border-b"
+          ? "bg-background/60 backdrop-blur-md border-b"
           : "bg-transparent"
       )}
     >
@@ -53,10 +54,14 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" size="sm">
-            Log in
-          </Button>
-          <Button size="sm">Get Started</Button>
+          <Link href="/sign-in">
+            <Button variant="ghost" size="sm">
+              Log in
+            </Button>
+          </Link>
+          <Link href="/sign-in">
+            <Button size="sm">Get Started</Button>
+          </Link>
         </div>
 
         <button

@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Button from "./button";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -26,9 +27,11 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in fade-in-delay-3">
-            <Button size="lg" rightIcon={<ArrowRight size={16} />}>
-              Start Deploying Free
-            </Button>
+            <Link href="/sign-in">
+              <Button size="lg" rightIcon={<ArrowRight size={16} />}>
+                Start Deploying Free
+              </Button>
+            </Link>
             <Button variant="outline" size="lg">
               View Documentation
             </Button>
