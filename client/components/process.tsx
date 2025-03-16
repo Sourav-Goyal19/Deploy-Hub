@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { GitBranch, Terminal, UploadCloud, Check } from "lucide-react";
 
 const steps = [
@@ -29,33 +28,6 @@ const steps = [
 ];
 
 const Process = () => {
-  const stepsRef = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-      }
-    );
-
-    stepsRef.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => {
-      stepsRef.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, []);
-
   return (
     <section id="process" className="py-20 md:py-28 px-4 md:px-6 lg:px-8">
       <div className="container">
@@ -68,12 +40,7 @@ const Process = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, i) => (
-            <div
-              key={step.title}
-              //@ts-ignore
-              ref={(el) => (stepsRef.current[i] = el)}
-              className="slide-in-up relative"
-            >
+            <div key={step.title} className="slide-in-up relative">
               <div className="bg-card rounded-lg border p-6 card-hover h-full">
                 <div className="absolute -top-3 -left-3 h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold z-10">
                   {i + 1}

@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import Button from "./button";
 import { Check } from "lucide-react";
 
@@ -54,33 +53,6 @@ const plans = [
 ];
 
 const Pricing = () => {
-  const planRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-      }
-    );
-
-    planRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => {
-      planRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, []);
-
   return (
     <section id="pricing" className="py-20 md:py-28 px-4 md:px-6 lg:px-8">
       <div className="container">
@@ -98,8 +70,6 @@ const Pricing = () => {
           {plans.map((plan, i) => (
             <div
               key={plan.name}
-              //@ts-ignore
-              ref={(el) => (planRefs.current[i] = el)}
               className={`slide-in-up ${
                 i === 0 ? "slide-in-left" : i === 2 ? "slide-in-right" : ""
               }`}

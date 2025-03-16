@@ -41,34 +41,6 @@ const features = [
 ];
 
 const Features = () => {
-  const featureRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -100px 0px",
-      }
-    );
-
-    featureRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => {
-      featureRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, []);
-
   return (
     <section id="features" className="py-20 md:py-28 px-4 md:px-6 lg:px-8">
       <div className="container">
@@ -86,8 +58,6 @@ const Features = () => {
           {features.map((feature, i) => (
             <div
               key={feature.title}
-              //@ts-ignore
-              ref={(el) => (featureRefs.current[i] = el)}
               className={`slide-in-up bg-card rounded-lg border p-6 card-hover ${
                 i % 3 === 0
                   ? "slide-in-left"

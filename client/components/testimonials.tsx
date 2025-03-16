@@ -1,5 +1,3 @@
-import { useEffect, useRef } from "react";
-
 const testimonials = [
   {
     quote:
@@ -28,33 +26,6 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
-  const testimonialRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-      }
-    );
-
-    testimonialRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => {
-      testimonialRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, []);
-
   return (
     <section
       id="testimonials"
@@ -75,8 +46,6 @@ const Testimonials = () => {
           {testimonials.map((testimonial, i) => (
             <div
               key={testimonial.author}
-              //@ts-ignore
-              ref={(el) => (testimonialRefs.current[i] = el)}
               className={`slide-in-up ${
                 i === 0 ? "slide-in-left" : i === 2 ? "slide-in-right" : ""
               }`}
