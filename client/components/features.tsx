@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { Server, Globe, Shield, Zap, GitBranch, BarChart } from "lucide-react";
 
 const features = [

@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Errback, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import { generateSlug } from "random-word-slugs";
 import { RunTaskCommand, ECSClient } from "@aws-sdk/client-ecs";
@@ -6,10 +6,22 @@ import { Server } from "socket.io";
 import { redis } from "./services/redis";
 import authRouter from "./routes/auth";
 import { authMiddleware } from "./middlewares/auth";
+import cors from "cors";
 
 const PORT = process.env.PORT || 9000;
 const app = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+app.use(express.urlencoded({ extended: false }));
+app.use((err: Errback, req: Request, res: Response, next: NextFunction) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Credentials", "true");
+});
 app.use(express.json());
 app.use(cookieParser());
 

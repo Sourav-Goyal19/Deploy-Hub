@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import { axiosInstance } from "@/lib/axios";
 
 type variant = "signup" | "verify";
 
@@ -36,6 +37,13 @@ const AuthForm = () => {
 
   type SignupFormValues = z.infer<typeof signupSchema>;
 
+  const signupMutation = useMutation({
+    mutationFn: async (data: SignupFormValues) => {
+      const res = await axiosInstance.post("/api/auth/signup", data);
+      return res;
+    },
+  });
+
   const signupForm = useForm<SignupFormValues>({
     defaultValues: {
       name: "",
@@ -46,21 +54,21 @@ const AuthForm = () => {
   });
 
   const onSignupSubmit: SubmitHandler<SignupFormValues> = async (data) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
-      const response = await axios.post("/api/users/signup", data);
-      toast.success(response.data.message);
-      router.push("/sign-in");
+      signupMutation.mutate(data, {
+        onSuccess(res, variables, context) {
+          router.push("/sign-in");
+          toast.success(res.data.message || "SignUp Successful");
+        },
+        onError(err, variables, context) {
+          console.error("SignUp:", err);
+          toast.error(err.message || "Something happened wrong");
+        },
+      });
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Signup error:", error.response?.data.error);
-        toast.error(error.response?.data.error || "An error occurred");
-      } else {
-        console.error("An unexpected error occurred:", error);
-        toast.error("Something went wrong");
-      }
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
 
@@ -79,7 +87,7 @@ const AuthForm = () => {
                 <FormLabel className="text-white">Name</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isLoading}
+                    disabled={isLoading || signupMutation.isPending}
                     placeholder="Enter Your Name"
                     {...field}
                   />
@@ -96,7 +104,7 @@ const AuthForm = () => {
                 <FormLabel className="text-white">Email</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isLoading}
+                    disabled={isLoading || signupMutation.isPending}
                     placeholder="Enter Your Email"
                     {...field}
                   />
@@ -113,7 +121,7 @@ const AuthForm = () => {
                 <FormLabel className="text-white">Password</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isLoading}
+                    disabled={isLoading || signupMutation.isPending}
                     type="password"
                     placeholder="Enter Your Password"
                     {...field}
@@ -123,7 +131,11 @@ const AuthForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={isLoading} className="w-full">
+          <Button
+            type="submit"
+            disabled={isLoading || signupMutation.isPending}
+            className="w-full"
+          >
             Sign Up
           </Button>
         </form>

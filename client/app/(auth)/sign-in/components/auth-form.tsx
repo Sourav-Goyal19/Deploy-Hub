@@ -18,6 +18,9 @@ import { useState } from "react";
 // import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { axiosInstance } from "@/lib/axios";
+import { setCookies } from "@/lib/utils";
 
 const AuthForm = () => {
   const router = useRouter();
@@ -30,6 +33,13 @@ const AuthForm = () => {
 
   type FormValues = z.infer<typeof formSchema>;
 
+  const loginMutation = useMutation({
+    mutationFn: async (data: FormValues) => {
+      const res = await axiosInstance.post("/api/auth/login", data);
+      return res;
+    },
+  });
+
   const form = useForm<FormValues>({
     defaultValues: {
       email: "",
@@ -39,24 +49,21 @@ const AuthForm = () => {
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setIsLoading(true);
     try {
-      // const result = await signIn("credentials", {
-      //   redirect: false,
-      //   email: data.email,
-      //   password: data.password,
-      // });
-      // if (result?.error) {
-      //   console.error("Sign-in error:", result.error);
-      //   toast.error("Invalid Credentials");
-      // } else {
-      //   toast.success("Login Successfully");
-      //   router.push("/dashboard");
-      // }
+      loginMutation.mutate(data, {
+        onSuccess(res, variables, context) {
+          router.push("/dashboard");
+          console.log(res.data);
+          setCookies(res.data.accessToken, res.data.refreshToken);
+          toast.success(res.data.message || "Logged In Successfully");
+        },
+        onError(err, variables, context) {
+          console.error("LOGIN:", err);
+          toast.error(err.message || "Something went wrong");
+        },
+      });
     } catch (error) {
-      console.error("An unexpected error occurred:", error);
     } finally {
-      setIsLoading(false);
     }
   };
 
@@ -72,7 +79,7 @@ const AuthForm = () => {
                 <FormLabel className="text-white">Email</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isLoading}
+                    disabled={isLoading || loginMutation.isPending}
                     placeholder="Enter Your Email"
                     {...field}
                   />
@@ -89,7 +96,7 @@ const AuthForm = () => {
                 <FormLabel className="text-white">Password</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isLoading}
+                    disabled={isLoading || loginMutation.isPending}
                     type="password"
                     placeholder="Enter Your Password"
                     {...field}
@@ -99,7 +106,11 @@ const AuthForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={isLoading} className="w-full">
+          <Button
+            type="submit"
+            disabled={isLoading || loginMutation.isPending}
+            className="w-full"
+          >
             Sign In
           </Button>
         </form>

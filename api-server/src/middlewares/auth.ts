@@ -19,7 +19,7 @@ export const authMiddleware = async (
   const { payload, expired } = verifyJWT(accessToken);
 
   if (expired) {
-    res.status(403).json({ error: "Invalid token" });
+    res.status(401).json({ error: "Invalid token" });
     return;
   }
 

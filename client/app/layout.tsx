@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-
-const inter = Inter({ subsets: ["latin"] });
+import { Toaster } from "@/components/ui/sonner";
+import { QueryProvider } from "@/providers/query-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,13 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        disableTransitionOnChange
-      > */}
-      <body className={inter.className}>{children}</body>
-      {/* </ThemeProvider> */}
+      <QueryProvider>
+        <body>{children}</body>
+      </QueryProvider>
+      {/* <Toaster /> */}
     </html>
   );
 }

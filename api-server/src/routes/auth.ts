@@ -23,7 +23,8 @@ const AuthLoginForm = z.object({
 });
 
 router
-  .post("/sign-up", async (req, res) => {
+  .post("/signup", async (req, res) => {
+    console.log("Request to /api/auth/signup");
     try {
       const body = req.body;
       const parsedResult = AuthSignUpForm.safeParse(body);
@@ -82,12 +83,6 @@ router
       const accessToken = generateAccessToken({ id: user.id });
       const refreshToken = generateRefreshToken({ id: user.id });
 
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-      });
-
       res
         .status(200)
         .json({ accessToken, refreshToken, message: "Login successfully" });
@@ -97,15 +92,16 @@ router
     }
   })
   .get("/refresh", (req, res) => {
-    const refreshToken: string | null = req.cookies.refreshToken;
+    const refreshToken: string | null = req.cookies.refresh_token;
+    console.log(refreshToken);
     if (!refreshToken) {
-      res.status(403).json({ error: "Refresh token expired" });
+      res.status(403).json({ error: "Invalid refresh token" });
       return;
     }
 
     const { payload, expired } = verifyJWT(refreshToken);
     if (expired) {
-      res.status(403).json({ error: "Invalid refresh token" });
+      res.status(403).json({ error: "Refresh token expired" });
       return;
     }
 
