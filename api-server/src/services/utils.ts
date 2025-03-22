@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 export function generateAccessToken(payload: Record<string, string>) {
   return jwt.sign(payload, process.env.PRIVATE_KEY!, {
     algorithm: "RS256",
-    expiresIn: "1m",
+    expiresIn: "15m",
   });
 }
 

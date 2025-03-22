@@ -3,7 +3,7 @@ import path from "path";
 import mime from "mime-types";
 import { exec } from "child_process";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { redis } from "./services/redis";
+import { redis } from "./libs/redis";
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION!,
@@ -20,7 +20,7 @@ const publishLog = async (message: string) => {
 };
 
 async function init() {
-  console.log("Building......");
+  publishLog("Building......");
   const outputDirPath = path.join("/", "home", "app", "output");
   await publishLog("Build Started");
   const p = exec(`cd ${outputDirPath} && npm install && npm run build`);
@@ -30,7 +30,7 @@ async function init() {
     publishLog("Installing packages");
   });
 
-  p.stderr?.on("data", (err) => {
+  p.stdout?.on("error", (err) => {
     console.error(err);
     publishLog(`Error:  ${err}`);
   });

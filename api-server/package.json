@@ -16,7 +16,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-ec2": "^3.772.0",
     "@aws-sdk/client-ecs": "^3.758.0",
+    "@aws-sdk/client-elastic-load-balancing-v2": "^3.772.0",
     "@neondatabase/serverless": "^0.10.4",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
