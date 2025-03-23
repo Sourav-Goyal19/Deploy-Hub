@@ -8,7 +8,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
   verifyJWT,
-} from "../services/utils";
+} from "../libs/utils";
 
 const router = express.Router();
 

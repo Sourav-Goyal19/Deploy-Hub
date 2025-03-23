@@ -1,9 +1,10 @@
 import fs from "fs";
 import path from "path";
 import mime from "mime-types";
+
 import { exec } from "child_process";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { redis } from "./libs/redis";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION!,
@@ -25,9 +26,10 @@ async function init() {
   await publishLog("Build Started");
   const p = exec(`cd ${outputDirPath} && npm install && npm run build`);
 
+  publishLog("Installing packages....");
   p.stdout?.on("data", (data) => {
     console.log(data.toString());
-    publishLog("Installing packages");
+    publishLog(data.toString());
   });
 
   p.stdout?.on("error", (err) => {
@@ -56,7 +58,7 @@ async function init() {
       await s3.send(command);
     }
     console.log("Upload completed");
-    publishLog("Deployment Successfull");
+    publishLog("Deployment Successfull 🎉");
   });
 }
 

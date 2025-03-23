@@ -64,6 +64,8 @@ async function init() {
 
         start.stdout?.on("data", (data) => {
           publishLog(data.toString());
+          publishLog("Your Service is live 🚀");
+          publishLog("Deployment Successful 🎉");
         });
 
         start.stdout?.on("error", (error) => {
@@ -72,10 +74,7 @@ async function init() {
         });
 
         start.on("close", (code) => {
-          if (code === 0) {
-            publishLog("Your Service is live");
-            publishLog("Deployment Successful 🚀");
-          } else {
+          if (code !== 0) {
             publishLog(`Start command failed with exit code ${code}`);
           }
         });

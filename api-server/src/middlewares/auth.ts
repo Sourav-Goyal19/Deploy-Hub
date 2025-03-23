@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verifyJWT } from "../services/utils";
+import { verifyJWT } from "../libs/utils";
 import { db } from "../../db/drizzle";
 import { userTable } from "../../db/schema";
 import { eq } from "drizzle-orm";
